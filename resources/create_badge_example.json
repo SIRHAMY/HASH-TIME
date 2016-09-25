@@ -1,0 +1,16 @@
+{   "label": "badge", 
+    "properties": 
+    {
+        "name":"test2", 
+        "time_created": 2,
+        "time_updated": 3,
+        "text": "I'm a sample badge",
+        "criteria": [
+            { //This is wrong
+                "text": "Complete Codeacademy course",
+                "link": "http://codeacademy.com"
+            }
+        ],
+        "type": "skill"
+    } 
+}

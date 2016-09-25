@@ -14,29 +14,36 @@ app = Flask(__name__)
 def handleDefault():
   return "Hello World I am running on " + str(PORT)
 
-@app.route("/getHash")
+@app.route("/getHash", methods=['POST'])
 def handleGetHash():
   HashWorker = HashProcessor.HashProcessor()
 
-  start = time.clock()
-  
-  hashOne = HashWorker.getHash('./resources/gitcat1.jpg')
-  #hashTwo = HashWorker.getHash('./resources/riskhappy.jpg')
-  hashValue = HashWorker.getHashValue(hashOne)
-  #hashValueTwo = HashWorker.getHashValue(hashTwo)
+  file=request.files['file']
 
-  end = time.clock()
-  print("Time to hash: %i" % (end - start) )
+  if file:
+    filePath = os.path.join('./resources/', file.filename)
+    file.save(filePath)
 
-  payload = {
-    'hash': hashOne,
-    'hashValue': hashValue,
-    #'hashTwo': hashTwo,
-    #'hashValueTwo': hashValueTwo,
-    #'distance': HashWorker.getHashDistance(hashOne, hashTwo)
-  }
+    start = time.clock()
+    
+    hashOne = HashWorker.getHash(filePath)
+    #hashTwo = HashWorker.getHash('./resources/riskhappy.jpg')
+    hashValue = HashWorker.getHashValue(hashOne)
+    #hashValueTwo = HashWorker.getHashValue(hashTwo)
 
-  return jsonify(**payload)
+    end = time.clock()
+    print("Time to hash: %i" % (end - start) )
+
+    payload = {
+      'hash': hashOne,
+      'hashValue': hashValue,
+      #'hashTwo': hashTwo,
+      #'hashValueTwo': hashValueTwo,
+      #'distance': HashWorker.getHashDistance(hashOne, hashTwo)
+    }
+
+    return jsonify(**payload)
+  return "OOPS"
 
 if __name__  == "__main__":
   app.run(host='0.0.0.0', port=PORT)
